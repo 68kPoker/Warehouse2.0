@@ -40,11 +40,11 @@ char *names[] = {
 void addLeavingTile(struct boardInfo *bi, UWORD j, UWORD i, WORD offset, struct fullInfo *info, struct fullInfo *srcInfo)
 {
 	struct RastPort *rp = bi->rp;
-	UWORD dist = DIST - info->gfx.dist;
+	WORD dist = DIST - info->gfx.dist;
 	WORD x0, y0, x1, y1, dx, dy;
 
-	j += dx = offset / TALL;
-	i += dy = offset % TALL;
+	j -= dx = offset / TALL;
+	i -= dy = offset % TALL;
 
 	dx *= dist;
 	dy *= dist;
@@ -56,23 +56,22 @@ void addLeavingTile(struct boardInfo *bi, UWORD j, UWORD i, WORD offset, struct 
 
 	if (x0 <= x1 && y0 <= y1)
 	{
-		D(bug("[%d/%d]-[%d/%d] (%d)\n", x0, y0, x1, y1, srcInfo->gfx.gfxFrame));
-	}
-
+		D(bug("[%d/%d]-[%d/%d] (%d)\n", x0, y0, x1, y1, info->gfx.gfxFrame));
 #if DRAW
-	SetAPen(rp, 0);
-	RectFill(rp, x0, y0, x1, y1);
+    	SetAPen(rp, info->gfx.gfxFrame);
+        RectFill(rp, (j << TILE) + x0, (i << TILE) + y0, (j << TILE) + x1, (i << TILE) + y1);
 #endif
+    }
 }
 
 void drawLeavingTile(struct boardInfo *bi, UWORD j, UWORD i, WORD offset, struct fullInfo *info, struct fullInfo *srcInfo)
 {
 	struct RastPort *rp = bi->rp;
-	UWORD dist = DIST - info->gfx.dist;
+	WORD dist = DIST - info->gfx.dist;
 	WORD x0, y0, x1, y1, dx, dy;
 
-	j += dx = offset / TALL;
-	i += dy = offset % TALL;
+	j -= dx = offset / TALL;
+	i -= dy = offset % TALL;
 
 	dx *= dist;
 	dy *= dist;
@@ -85,12 +84,11 @@ void drawLeavingTile(struct boardInfo *bi, UWORD j, UWORD i, WORD offset, struct
 	if (x0 <= x1 && y0 <= y1)
 	{
 		D(bug("[%d/%d]-[%d/%d] (%d)\n", x0, y0, x1, y1, info->gfx.gfxFrame));
-	}
-
 #if DRAW
-	SetAPen(rp, info->gfx.gfxFrame);
-	RectFill(rp, (j << TILE) + x0, (i << TILE) + y0, (j << TILE) + x1, (i << TILE) + y1);
+    	SetAPen(rp, info->gfx.gfxFrame);
+	    RectFill(rp, (j << TILE) + x0, (i << TILE) + y0, (j << TILE) + x1, (i << TILE) + y1);
 #endif
+	}
 
 	if (dx) {
 		if (x0 == 0) {
@@ -116,22 +114,21 @@ void drawLeavingTile(struct boardInfo *bi, UWORD j, UWORD i, WORD offset, struct
 	if (x0 <= x1 && y0 <= y1)
 	{
 		D(bug("[%d/%d]-[%d/%d] (%d)\n", x0, y0, x1, y1, 0));
-	}
-
 #if DRAW
-	SetAPen(rp, 0);
-	RectFill(rp, (j << TILE) + x0, (i << TILE) + y0, (j << TILE) + x1, (i << TILE) + y1);
+    	SetAPen(rp, 0);
+	    RectFill(rp, (j << TILE) + x0, (i << TILE) + y0, (j << TILE) + x1, (i << TILE) + y1);
 #endif
+    }
 }
 
 void addEnteringTile(struct boardInfo *bi, UWORD j, UWORD i, WORD offset, struct fullInfo *info)
 {
 	struct RastPort *rp = bi->rp;
-	UWORD dist = -info->gfx.dist;
+	WORD dist = info->gfx.dist;
 	WORD x0, y0, x1, y1, dx, dy;
 
-	dx = (offset) / TALL;
-	dy = (offset) % TALL;
+	dx = (-offset) / TALL;
+	dy = (-offset) % TALL;
 
 	dx *= dist;
 	dy *= dist;
@@ -144,22 +141,21 @@ void addEnteringTile(struct boardInfo *bi, UWORD j, UWORD i, WORD offset, struct
 	if (x0 <= x1 && y0 <= y1)
 	{
 		D(bug("[%d/%d]-[%d/%d] (%d)\n", x0, y0, x1, y1, info->gfx.gfxFrame));
-	}
-
 #if DRAW
-	SetAPen(rp, 0);
-	RectFill(rp, (j << TILE) + x0, (i << TILE) + y0, (j << TILE) + x1, (i << TILE) + y1);
+    	SetAPen(rp, info->gfx.gfxFrame);
+	    RectFill(rp, (j << TILE) + x0, (i << TILE) + y0, (j << TILE) + x1, (i << TILE) + y1);
 #endif
+    }
 }
 
 void drawEnteringTile(struct boardInfo *bi, UWORD j, UWORD i, WORD offset, struct fullInfo *info)
 {
 	struct RastPort *rp = bi->rp;
-	UWORD dist = -info->gfx.dist;
+	WORD dist = info->gfx.dist;
 	WORD x0, y0, x1, y1, dx, dy;
 
-	dx = (offset) / TALL;
-	dy = (offset) % TALL;
+	dx = (-offset) / TALL;
+	dy = (-offset) % TALL;
 
 	dx *= dist;
 	dy *= dist;
@@ -172,12 +168,12 @@ void drawEnteringTile(struct boardInfo *bi, UWORD j, UWORD i, WORD offset, struc
 	if (x0 <= x1 && y0 <= y1)
 	{
 		D(bug("[%d/%d]-[%d/%d] (%d)\n", x0, y0, x1, y1, info->gfx.gfxFrame));
-	}
-
 #if DRAW
-	SetAPen(rp, info->gfx.gfxFrame);
-	RectFill(rp, (j << TILE) + x0, (i << TILE) + y0, (j << TILE) + x1, (i << TILE) + y1);
+    	SetAPen(rp, info->gfx.gfxFrame);
+	    RectFill(rp, (j << TILE) + x0, (i << TILE) + y0, (j << TILE) + x1, (i << TILE) + y1);
 #endif
+    }
+
 	if (dx) {
 		if (x0 == 0) {
 			x0 = x1 + 1;
@@ -202,11 +198,20 @@ void drawEnteringTile(struct boardInfo *bi, UWORD j, UWORD i, WORD offset, struc
 	if (x0 <= x1 && y0 <= y1)
 	{
 		D(bug("[%d/%d]-[%d/%d] (%d)\n", x0, y0, x1, y1, 0));
-	}
+#if DRAW
+    	SetAPen(rp, 0);
+	    RectFill(rp, (j << TILE) + x0, (i << TILE) + y0, (j << TILE) + x1, (i << TILE) + y1);
+#endif
+    }
+}
+
+void drawTile(struct boardInfo *bi, UWORD j, UWORD i, struct fullInfo *info)
+{
+    struct RastPort *rp = bi->rp;
 
 #if DRAW
-	SetAPen(rp, 0);
-	RectFill(rp, (j << TILE) + x0, (i << TILE) + y0, (j << TILE) + x1, (i << TILE) + y1);
+	SetAPen(rp, info->gfx.gfxFrame);
+	RectFill(rp, (j << TILE), (i << TILE), (j << TILE) + 15, (i << TILE) + 15);
 #endif
 }
 
@@ -268,6 +273,7 @@ void updateTileGfx(struct boardInfo *bi, UWORD j, UWORD i, struct fullInfo *info
 
 	if (!info->drawn) {
 		D(bug("Drawing object frame %s at %d/%d\n", names[gfx->gfxFrame], j, i));
+		drawTile(bi, j, i, info);
 		info->drawn = TRUE;
 	}
 	else
@@ -290,7 +296,7 @@ void updateBoardGfx(struct boardInfo *bi)
 	for (j = 0; j < WIDE; j++) {
 		for (i = 0; i < TALL; i++) {
 			if (info->updateGfx) {
-				updateAnimGfx(bi, j, i, info);				
+				updateAnimGfx(bi, j, i, info);
 			}
 			info++;
 		}
